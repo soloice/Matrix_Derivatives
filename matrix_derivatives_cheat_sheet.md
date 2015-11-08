@@ -38,7 +38,7 @@
     * 若函数$\bf{f}:\mathbf{R^{m\times 1}}\rightarrow\mathbf{R^{1\times n}}$，则$\partial{\bf{f^T}}/\partial{\bf{x}}$是一个$n\times m$维矩阵，定义为$\partial{\bf{f^T}}/\partial{\bf{x}} = (\partial{\bf{f}}/\partial{\bf{x^T}})^\bf{T}$。也即有$(\partial{\bf{f^T}}/\partial{\bf{x}})_{ij} = \partial{f_j}/\partial{x_i}$。
 * 梯度、Hessian矩阵和劈形算子$\nabla$：
     * 有时也将矩阵/向量求导的结果用劈形算子表示，即：$\nabla_{x} f = \partial{f}/\partial{x}$（此式中$x$和$f$代表任意维度的向量或矩阵）。在求导的变量比较明确时，$\nabla$的下标可以省略，简记为$\nabla{f}$；
-    * 对于一个实函数$f:\mathbf{R^{m\times1}}\rightarrow\mathbf{R}$，其梯度规定为$m$维列向量$\nabla f =  \textbf{grad} f = \dfrac{\partial{f}}{\partial{\bf{x}}}$，Hessian矩阵规定为$\nabla \nabla f = \dfrac{\partial(\nabla f)}{\partial{\bf{x^T}}} = \dfrac{\partial^2{f}}{\partial{\bf{x}}\partial{\bf{x^T}}}$，是一个$m\times m$的矩阵。此时两个$\nabla$符号理解成分别对$\bf{x}$和$\bf{x^T}$求导（可交换顺序）。
+    * 对于一个实函数$f:\mathbf{R^{m\times1}}\rightarrow\mathbf{R}$，其梯度规定为$m$维列向量$\nabla f =  \textbf{grad} f = \dfrac{\partial{f}}{\partial{\bf{x}}}$，Hessian矩阵规定为$\nabla^2 f = \nabla \nabla f = \dfrac{\partial(\nabla f)}{\partial{\bf{x^T}}} = \dfrac{\partial^2{f}}{\partial{\bf{x}}\partial{\bf{x^T}}}$，是一个$m\times m$的矩阵。此时两个$\nabla$符号理解成分别对$\bf{x}$和$\bf{x^T}$求导（可交换顺序）。
     * 对于一个实函数$f:\mathbf{R^{m\times n}}\rightarrow\mathbf{R}$，其梯度规定为$m\times n$维矩阵$\nabla f =  \dfrac{\partial{f}}{\partial{\bf{X}}}$，Hessian矩阵不作定义。
 
 对上述约定的理解
@@ -101,9 +101,11 @@
         * 设有$f(\mathbf{Y}):\mathbf{R^{m\times p}}\rightarrow\mathbf{R}$及线性映射 $\mathbf{X}\mapsto\mathbf{Y=AX+B}:\mathbf{R^{n\times p}}\rightarrow\mathbf{R^{m\times p}}$，则：
             * $\nabla_{\mathbf{X}} \;f(\mathbf{AX+B}) = \mathbf{A^T} \nabla_\mathbf{Y} f$
             * 向量的线性变换是上式的退化情形，即：$\nabla_{\mathbf{x}} \;f(\mathbf{Ax+b}) = \mathbf{A^T} \nabla_\mathbf{y} f$
+            * 向量的线性变换还可以求二阶导：$\nabla^2_{\mathbf{x}} \;f(\mathbf{Ax+b}) = \mathbf{A^T} (\nabla^2_\mathbf{y} f) \mathbf{A}$
 * 矩阵/向量对实数求导：
     * $(|\mathbf{F}|)'_x = |\mathbf{F}| tr(\mathbf{F^{-1}}\mathbf{F'}_x)$
-    * $(\ln |\mathbf{F}|)'_x = tr(\mathbf{X^{-1}}\mathbf{X}'_x)$
+    * $(\ln |\mathbf{F}|)'_x = tr(\mathbf{F^{-1}}\mathbf{F}'_x)$
+    * $\mathbf{(F^{-1})'}_x = -\mathbf{F^{-1}} \mathbf{F'}_x \mathbf{F^{-1}}$（可对恒等式$\mathbf{FF^{-1}=I}$两边同时求导来证明）
 
 
 此外应注意到以下两条规律：
