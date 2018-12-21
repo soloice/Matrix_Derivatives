@@ -121,7 +121,6 @@
 
 - 这几种计算图的表示法没有本质区别，读者也可以尝试其他可能的画法，自己看着舒服就行
 
-  
 
 BN 原论文中给出了反向传播的公式，不过这里我们不妨试着自己手算一遍，加深对计算图的理解。下面的计算暂时不涉及向量/矩阵的求导，只是正常的多元函数求偏导，读者可以放心自己动手算：
 
@@ -138,7 +137,10 @@ BN 原论文中给出了反向传播的公式，不过这里我们不妨试着�
    *  所以 $\dfrac{\partial l}{\partial \mu_B} = \sum_i (\dfrac{\partial l}{\partial \hat{x}_i} \dfrac{\partial \hat{x}_i}{\partial \mu_B} + \dfrac{\partial l}{\partial \sigma_B^2} \dfrac{\partial \sigma_B^2}{\partial \mu_B})$
    *  又因为 $\dfrac{\partial \sigma_B^2}{\partial \mu_B}=\dfrac{-2}{m}\sum_j (x_j-\mu_B)=0$，上式可以化简为 $\dfrac{\partial l}{\partial \mu_B} = \sum_i \dfrac{\partial l}{\partial \hat{x}_i} \dfrac{\partial \hat{x}_i}{\partial \mu_B}=\sum_i \dfrac{\partial l}{\partial \hat{x}_i} \dfrac{-1}{\sqrt{\sigma_B^2+\epsilon}}$
 *  $\forall i, x_i$ 影响损失函数有 $3$ 条路径：$x_i \rightarrow \hat{x}_i \rightarrow l, x_i \rightarrow \sigma_B^2 \rightarrow l, x_i \rightarrow \mu \rightarrow l$
-   *  故 $\dfrac{\partial l}{\partial x_i} = \dfrac{\partial l}{\partial \hat{x}_i} \dfrac{\partial \hat{x}_i}{\partial x_i} + \dfrac{\partial l}{\partial \sigma_B^2} \dfrac{\partial \sigma_B^2}{\partial x_i} + \dfrac{\partial l}{\partial \mu_B} \dfrac{\partial \mu_B}{\partial x_i} = \sum_i \dfrac{\partial l}{\partial \hat{x}_i} \dfrac{1}{\sqrt{\sigma_B^2+\epsilon}} + \dfrac{\partial l}{\partial \sigma_B^2} \dfrac{2}{m}(x_i - \mu_B) + \dfrac{\partial l}{\partial \mu_B} \dfrac{1}{m}$
+   *  故 $$ \begin{align*} 
+   \dfrac{\partial l}{\partial x_i} & = & \dfrac{\partial l}{\partial \hat{x}_i} \dfrac{\partial \hat{x}_i}{\partial x_i} + \dfrac{\partial l}{\partial \sigma_B^2} \dfrac{\partial \sigma_B^2}{\partial x_i} + \dfrac{\partial l}{\partial \mu_B} \dfrac{\partial \mu_B}{\partial x_i} \\
+    & = & \sum_i \dfrac{\partial l}{\partial \hat{x}_i} \dfrac{1}{\sqrt{\sigma_B^2+\epsilon}} + \dfrac{\partial l}{\partial \sigma_B^2} \dfrac{2}{m}(x_i - \mu_B) + \dfrac{\partial l}{\partial \mu_B} \dfrac{1}{m}
+    \end{align*}$$
 
 
 
@@ -198,8 +200,13 @@ BN 原论文中给出了反向传播的公式，不过这里我们不妨试着�
 
   - $\nabla (\boldsymbol{x}^TA\boldsymbol{x}) = (A+A^T)\boldsymbol{x}$
 
-    - 证明（变量多次出现的求导法则）：$LHS = \nabla (\boldsymbol{x}_c^TA\boldsymbol{x}) + \nabla (\boldsymbol{x}^TA\boldsymbol{x}_c) = \nabla ((A^T\boldsymbol{x}_c)^T\boldsymbol{x}) + \nabla ((A\boldsymbol{x}_c)^T\boldsymbol{x}_c) = A^T\boldsymbol{x}_c + A\boldsymbol{x}_c = RHS $
-    - 若 $A$ 是对称矩阵，上式右边还可以进一步化简为 $2A\boldsymbol{x}$
+    - 证明（变量多次出现的求导法则）：$$\begin{align*} 
+    LHS & = & \nabla (\boldsymbol{x}_c^TA\boldsymbol{x}) + \nabla (\boldsymbol{x}^TA\boldsymbol{x}_c) \\
+     & = & \nabla ((A^T\boldsymbol{x}_c)^T\boldsymbol{x}) + \nabla ((A\boldsymbol{x}_c)^T\boldsymbol{x}) \\ 
+    & = & A^T\boldsymbol{x}_c + A\boldsymbol{x}_c \\
+     & = & RHS 
+    \end{align*}$$
+    - 若 $A$ 是对称矩阵，即 $A=A^T$，上式右边还可以进一步化简为 $2A\boldsymbol{x}$
 
   - **向量函数内积的求导法则**
 
@@ -207,7 +214,6 @@ BN 原论文中给出了反向传播的公式，不过这里我们不妨试着�
 
     - 证明（变量多次出现的求导法则 + 一次复合的求导法则）：$LHS=\nabla(\boldsymbol{u}^T\boldsymbol{v}_c)+\nabla(\boldsymbol{u}_c^T\boldsymbol{v}) = (\nabla_{\boldsymbol{x}} \boldsymbol{u})^T \boldsymbol{v}_c + (\nabla_{\boldsymbol{x}} \boldsymbol{v})^T \boldsymbol{u}_c = RHS$
 
-      
 
 #### 向量数乘求导公式
 
@@ -219,7 +225,6 @@ BN 原论文中给出了反向传播的公式，不过这里我们不妨试着�
 
   - 记忆：按两个标量函数相乘的求导法则记，再注意一下**维度相容原理**即可。另外注意，等式左边 $\alpha(\boldsymbol{x})\boldsymbol{f(x)}$ 是向量的数乘（若 $\boldsymbol{f(x)}$ 为行向量也可视作矩阵乘法）；右边 $\alpha(\boldsymbol{x})\nabla_{\boldsymbol{x}}\boldsymbol{f(x)}$ 是矩阵的数乘。
 
-    
 
 #### 矩阵迹求导
 
@@ -227,7 +232,12 @@ BN 原论文中给出了反向传播的公式，不过这里我们不妨试着�
 - 先回顾一下迹的基本性质：
   - 线性性质：$tr(\sum_i c_iA_i) = \sum_ic_i tr(A_i)$
   - 转置不变性：$tr(A) = tr(A^T)$
-  - 轮换不变性：$tr(A_1A_2\cdots A_n) = tr(A_2A_3\cdots A_nA_1) = \cdots = tr(A_{n-1}A_nA_1\cdots A_{n-2}) = tr(A_nA_1\cdots A_{n-2}A_{n-1})$。
+  - 轮换不变性：$$\begin{align*}
+  tr(A_1A_2\cdots A_n) & = &  tr(A_2A_3\cdots A_nA_1) \\
+   & = & \cdots \\
+    & = & tr(A_{n-1}A_nA_1\cdots A_{n-2}) \\
+    & = & tr(A_nA_1\cdots A_{n-2}A_{n-1})
+    \end{align*}$$
     - 特别地，$tr(AB) = tr(BA)$
     - **注意，轮换不变性不等于交换性。**例如：$tr(ABC) = tr(BCA) = tr(CAB)$，但是一般情况下 $tr(ABC) \neq tr(ACB)$。
 - 基本公式：
@@ -236,7 +246,11 @@ BN 原论文中给出了反向传播的公式，不过这里我们不妨试着�
   - 根据此式容易得到另一个式子：$\nabla tr(AX) = \nabla tr(XA) = A^T$
 - **迹方法的核心公式**：
   - $\nabla tr(XAX^TB) = B^TXA^T + BXA$
-  - 推导（变量多次出现的求导法则。其中 $X_c$ 表示将 $X$ 的此次出现视作常数）：$\nabla tr(XAX^TB) = \nabla tr(XAX_c^TB) + \nabla tr(X_cAX^TB) = (AX_c^TB)^T + \nabla tr(BX_cAX^T) \\ = B^TX_cA^T + BX_cA = B^TXA^T + BXA$
+  - 推导（变量多次出现的求导法则。其中 $X_c$ 表示将 $X$ 的此次出现视作常数）：$$\begin{align*}
+   LHS & = & \nabla tr(XAX_c^TB) + \nabla tr(X_cAX^TB) \\
+    & = & (AX_c^TB)^T + \nabla tr(BX_cAX^T) \\
+     & = & B^TX_cA^T + BX_cA = RHS
+     \end{align*}$$
   - 这个公式非常重要，在推导最小二乘解等多个问题上都会遇到。公式的名字是我瞎起的。
 - 其他与矩阵迹有关的公式
   - 大部分都是上述核心公式的简单推论，不必强记，用的时候顺手推就行
@@ -269,7 +283,7 @@ BN 原论文中给出了反向传播的公式，不过这里我们不妨试着�
   - 向量的线性变换是矩阵线性变化的退化情形，即：
     - 若 $\boldsymbol{y}\overset{\mathrm{def}}{=}A\boldsymbol{x+b}$，则 $\nabla_{\boldsymbol{x}} \;f(A\boldsymbol{x}+\boldsymbol{b}) = A^T \nabla_\boldsymbol{y} f$
     - 向量的线性变换还可以求二阶导：$\nabla^2_{\boldsymbol{x}} \;f(A\boldsymbol{x+b}) = A^T (\nabla^2_\boldsymbol{y} f) A$
-    - 推导：记 $\boldsymbol{u(y)} = \nabla_\boldsymbol{y} f, \boldsymbol{w(u)} = A^T \boldsymbol{u} = A^T \nabla_\boldsymbol{y} f$，则 $\nabla^2_{\boldsymbol{x}} \;f(\boldsymbol{Ax+b}) = \nabla_{\boldsymbol{x}} (\nabla_{\boldsymbol{x}} \;f(A\boldsymbol{x}+\boldsymbol{b})) = \nabla_\boldsymbol{x} \boldsymbol{w} = \dfrac{\partial \boldsymbol{w}}{\partial \boldsymbol{x}} = \dfrac{\partial \boldsymbol{w}}{\partial \boldsymbol{u}} \dfrac{\partial \boldsymbol{u}}{\partial \boldsymbol{y}} \dfrac{\partial \boldsymbol{y}}{\partial \boldsymbol{x}}= A^T (\nabla^2_\boldsymbol{y} f) A$
+    - 推导：记 $\boldsymbol{u(y)} = \nabla_\boldsymbol{y} f, \boldsymbol{w(u)} = A^T \boldsymbol{u} = A^T \nabla_\boldsymbol{y} f$，则 $LHS = \nabla_{\boldsymbol{x}} (\nabla_{\boldsymbol{x}} \;f(A\boldsymbol{x}+\boldsymbol{b})) = \nabla_\boldsymbol{x} \boldsymbol{w} = \dfrac{\partial \boldsymbol{w}}{\partial \boldsymbol{u}} \dfrac{\partial \boldsymbol{u}}{\partial \boldsymbol{y}} \dfrac{\partial \boldsymbol{y}}{\partial \boldsymbol{x}}= A^T (\nabla^2_\boldsymbol{y} f) A$
   - 由于线性变换很常用，这里不妨把给 $X$ 右乘一个矩阵时的公式一并给出，以便查阅
     - 设有$f(Y):\mathbb{R}^{m\times p}\rightarrow\mathbb{R}$及线性映射 $X\mapsto Y=XC+D:\mathbb{R}^{m\times n}\rightarrow\mathbb{R}^{m\times p}$（因此 $C \in \mathbb{R}^{n\times p}, D \in \mathbb{R}^{m\times p}$），则：$\nabla_{X} \;f(XC+D) = (\nabla_{Y} f) C^T$
     - 证明：将 $X^T$ 和 $Y^T$ 分别视为自变量和中间变量，则：$X^T \rightarrow Y^T=C^TX^T + D^T \rightarrow f$。于是 $\nabla_{X} f = (\nabla_{X^T}f)^T = (C \nabla_{Y^T} f)^T = (\nabla_{Y^T} f)^T C^T = (\nabla_{Y} f) C^T$
@@ -468,7 +482,6 @@ $$
 
       - 注意上述第二个等号的推导过程也是一个分块矩阵乘法：前一项是两个分块矩阵的乘积，两个分块矩阵分别由 $N\times 1$ 和 $1\times 1$ 个块组成
 
-​    
 
 #### 学习仿射变换
 
@@ -634,9 +647,12 @@ $$
 - 然后根据雅克比矩阵的运算规则计算损失函数对隐层的导数
   - 先计算 $\dfrac {\partial \boldsymbol{h}_{i+1}}{\partial \boldsymbol{h}_{i}} = \dfrac {\partial \boldsymbol{h}_{i+1}}{\partial f(\boldsymbol{h}_{i})} \dfrac {\partial f(\boldsymbol{h}_{i})}{\partial \boldsymbol{h}_{i}}= W \text{diag}(f'(\boldsymbol{h}_{i})) $
     - Stanford 的讲义和前述论文中，均认为 $\dfrac {\partial \boldsymbol{h}_{i+1}}{\partial \boldsymbol{h}_{i}} = W^T \text{diag}(f'(\boldsymbol{h}_{i}))$，这一点应该是错的，矩阵 $W$ 不应该被转置，根据雅克比矩阵的定义写一个梯度检查的程序即可快速验证这一点。不过这个小错误不影响 RNN 梯度消失/爆炸现象的论证。
-  - 根据多次复合的向量求导法则，得： $\dfrac{\partial l_t}{\partial \boldsymbol{h}^T_k} = \dfrac{\partial l_t}{\partial \boldsymbol{h}^T_t} \dfrac{\partial \boldsymbol{h}_{t}}{\partial \boldsymbol{h}_{t-1}} \cdots \dfrac{\partial \boldsymbol{h}_{k+1}}{\partial \boldsymbol{h}_{k}} = \dfrac{\partial l_t}{\partial \boldsymbol{h}^T_t} W \text{diag}(f'(\boldsymbol{h}_{t-1})) \cdots W \text{diag}(f'(\boldsymbol{h}_{k}))$
+  - 根据多次复合的向量求导法则，得： $$\begin{align*} 
+  \dfrac{\partial l_t}{\partial \boldsymbol{h}^T_k} & = & \dfrac{\partial l_t}{\partial \boldsymbol{h}^T_t} \dfrac{\partial \boldsymbol{h}_{t}}{\partial \boldsymbol{h}_{t-1}} \cdots \dfrac{\partial \boldsymbol{h}_{k+1}}{\partial \boldsymbol{h}_{k}} \\
+   & = & \dfrac{\partial l_t}{\partial \boldsymbol{h}^T_t} W \text{diag}(f'(\boldsymbol{h}_{t-1})) \cdots W \text{diag}(f'(\boldsymbol{h}_{k}))
+   \end{align*}$$
   - 将此式两边转置，再代入 $\dfrac{\partial l_t}{\partial W}$ 中，就能得到最终结果。类似地，$\dfrac{\partial l_t}{\partial \boldsymbol{b}} = \dfrac{\partial l_t}{\partial \boldsymbol{h}_t},  \dfrac{\partial l_t}{\partial U} = \dfrac{\partial l_t}{\partial \boldsymbol{h}_t}\boldsymbol{x}_t^T, \dfrac{\partial l_t}{\partial \boldsymbol{x}_t} = U^T\dfrac{\partial l_t}{\partial \boldsymbol{h}_t}$，这就是 vanilla RNN 的 BPTT 的公式。中间很多个隐层之间的雅克比相乘那一部分也可以用求积符号来书写，不过展开写更清楚一些。
-- 注：实践中具体计算梯度的时候，一般还是先定义一组类似于 BP 神经网络中的 $\delta_t$ 的变量，使用循环逐层进行计算。这里只是为了展示向量求导的方法，强行把每一步的结果都展开了。
+- 注：实践中具体计算梯度的时候，一般还是先定义一组类似于 BP 神经网络中的 $\delta_t​$ 的变量，使用循环逐层进行计算。这里只是为了展示向量求导的方法，强行把每一步的结果都展开了。
 
 
 
@@ -659,8 +675,6 @@ $$
   & = & \sigma(W_c\boldsymbol{x} + \boldsymbol{b}_1) (\nabla_{\boldsymbol{t}} l(\boldsymbol{t}))^T
        \end{align*}
   $$
-
-  
 
 - 第二项计算如下：
 
