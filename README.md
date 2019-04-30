@@ -4,4 +4,4 @@ The expected readers are machine learning students who wants to use matrix deriv
 
 -----------------------------
 这是一份关于矩阵求导的笔记，主要介绍了个人的使用经验。
-本文期望的读者是打算将矩阵求导作为工具使用的学生，而追寻非严谨证明的数学学生。
+本文期望的读者是打算将矩阵求导作为工具使用的学生，而非追寻严谨证明的数学学生。
